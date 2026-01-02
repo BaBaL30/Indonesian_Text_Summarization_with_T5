@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indonesian Text Summarizer</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Indonesian Text Summarizer</h1>
+        <p class="subtitle">Summarize Indonesian news articles using T5</p>
+      </header>
+
+      <main>
+        <div class="form-group">
+          <label for="text">Enter News Text:</label>
+          <textarea
+            id="text"
+            placeholder="Paste your Indonesian text here..."
+            autofocus
+          ></textarea>
+        </div>
+
+        <div class="action-group">
+          <button id="summarize-btn" onclick="summarizeText()">
+            <span class="btn-text">Summarize</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+
+        <div id="error" class="error" style="display: none"></div>
+
+        <div id="results" class="results" style="display: none">
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-label">Original Length</div>
+              <div class="stat-value" id="original-length">0</div>
+              <div class="stat-unit">characters</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Summary Length</div>
+              <div class="stat-value" id="summary-length">0</div>
+              <div class="stat-unit">characters</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Reduction</div>
+              <div class="stat-value" id="reduction">0%</div>
+            </div>
+          </div>
+
+          <div class="summary">
+            <h3>Summary:</h3>
+            <div id="summary-text" class="summary-text"></div>
+          </div>
+          
+          <div class="generated-time">
+            Generated at: <span id="timestamp"></span>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function summarizeText() {
+        const text = document.getElementById("text").value.trim();
+        const btn = document.getElementById("summarize-btn");
+        const errorDiv = document.getElementById("error");
+        const resultsDiv = document.getElementById("results");
+
+        // Reset UI
+        errorDiv.style.display = "none";
+        resultsDiv.style.display = "none";
+
+        // Validate input
+        if (!text) {
+          showError("Please enter text to summarize");
+          return;
+        }
+
+        // Show loading state
+        btn.classList.add("loading");
+
+        // Make API request
+        fetch("/api/summarize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: text }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((err) => {
+                throw err;
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Display results
+            document.getElementById("summary-text").textContent = data.summary;
+            document.getElementById("original-length").textContent =
+              data.original_length;
+            document.getElementById("summary-length").textContent =
+              data.summary_length;
+              
+            // Calculate reduction percentage
+            const reduction = Math.round(
+              (1 - data.summary_length / data.original_length) * 100
+            );
+            document.getElementById("reduction").textContent = `${reduction}%`;
+            
+            document.getElementById("timestamp").textContent = new Date(
+              data.timestamp
+            ).toLocaleString();
+            resultsDiv.style.display = "block";
+          })
+          .catch((error) => {
+            const errorMsg =
+              error.message || error.error || "Failed to generate summary";
+            showError(errorMsg);
+          })
+          .finally(() => {
+            btn.classList.remove("loading");
+          });
+      }
+
+      function showError(message) {
+        const errorDiv = document.getElementById("error");
+        errorDiv.textContent = message;
+        errorDiv.style.display = "block";
+      }
+    </script>
+  </body>
+</html>

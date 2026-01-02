@@ -1,0 +1,244 @@
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary: #3f37c9;
+  --text: #2b2d42;
+  --text-light: #8d99ae;
+  --background: #f8f9fa;
+  --white: #ffffff;
+  --error: #ef233c;
+  --error-bg: #fdd8dc;
+  --success: #4cc9f0;
+  --border: #e9ecef;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--background);
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+h1 {
+  color: var(--primary);
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-light);
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  min-height: 200px;
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+.action-group {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  min-width: 150px;
+}
+
+button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+button .spinner {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--white);
+  animation: spin 1s ease-in-out infinite;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+button.loading .btn-text {
+  visibility: hidden;
+}
+
+button.loading .spinner {
+  display: block;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.error {
+  color: var(--error);
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--error-bg);
+  border-radius: 8px;
+  text-align: center;
+  display: none;
+}
+
+.results {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  display: none;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+  box-shadow: var(--shadow);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.stat-unit {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.summary {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.summary h3 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.summary-text {
+  white-space: pre-line;
+  line-height: 1.8;
+}
+
+.generated-time {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .stats {
+    flex-direction: column;
+  }
+  
+  .stat-item {
+    width: 100%;
+  }
+}
